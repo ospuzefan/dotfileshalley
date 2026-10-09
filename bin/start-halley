@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# Toolkit Backend Redirections
+export XDG_SESSION_TYPE=wayland
+export XDG_CURRENT_DESKTOP=halley
+export MOZ_ENABLE_WAYLAND=1
+export QT_QPA_PLATFORM=wayland
+export GDK_BACKEND=wayland
+
+# Hardware Acceleration & Seat Management (Gentoo Essentials)
+# If using an NVIDIA card, you might also need: export WLR_RENDERER=vulkan
+export XKB_DEFAULT_LAYOUT=us
+
+gentoo-pipewire-launcher
+# Execute Halley and pass-through any script arguments
+
+if ! pgrep -u "$USER" -x "mpd" > /dev/null; then
+    mpd ~/.config/mpd/mpd.conf
+fi
+ulimit -Sn 65536 2>/dev/null
+dunst &
+stasis &
+exec halley "$@"
